@@ -8,10 +8,39 @@
                     <tr >                        
                         <th scope="col" data-field="id" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">ID<span></th>
                         <th scope="col" data-field="imagem" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">Imagem<span></th>
-                        <th scope="col" data-field="nome" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Nome<span></th>       
+                        <th scope="col" data-field="nome" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Nome<span></th>
+                        <th scope="col" data-field="variacao" data-sortable="true" ><span style="font-weight: bold; font-size:16px; whidth:50px">Variação <span></th>
                     </tr>
                 </thead>
-      
             </table>
+            <div class="modal fade"  id="Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div  class="modal-dialog  modal-lg" role="document">
+                    <div  class="modal-content">
+                        <div class="modal-content b-0">
+                            <div class="modal-header r-0 bg-primary">
+                                <h3 class="modal-title text-white text-white" id="exampleModalLabel">Adicionar variação do produto </h3>
+                                <a href="#" data-dismiss="modal" aria-label="Close" class="paper-nav-toggle paper-nav-white active"><i></i></a>
+                            </div>
+                            <form id="editarCliente" action="?editarCliente&Clientes" method="POST"> 
+                                <div class="modal-body no-b" id="no-b">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Nome: </label>
+                                                <input id="nome" class="form-control" name="nome">
+                                            </div>
+                                        </div>    
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="savet" class="btn btn-primary" type="submit">
+                                        <i class="icon icon-floppy-o"></i>Salvar Mudanças
+                                    </button>  
+                                </div>
+                            </form>
+                        </div>          
+                    </div>            
+                </div>
+            </div>
         </div>
     </div>

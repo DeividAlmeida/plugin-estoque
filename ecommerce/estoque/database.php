@@ -27,7 +27,8 @@ if(is_array($data)){
                     $termo = ler("SELECT * FROM ecommerce_prod_termos WHERE id_produto = {$valor['id']} AND id_atributo = {$Avalor['id_atributo']}");
                     if(is_array($termo)){
                         foreach($termo as $Tchave => $Tvalor){
-                          $tabela[$chave][$Achave][$Tchave]['termo'] =  ler("SELECT * FORM ecommerce_termos WHERE id = {$Tvalor['id_termo']}");
+                          $tabela[$chave][$Achave][$Tchave]['nome'] =  ler("SELECT * FROM ecommerce_termos WHERE id = {$Tvalor['id_termo']}")[0]['nome'];
+                          $tabela[$chave][$Achave][$Tchave]['id'] =  ler("SELECT * FROM ecommerce_termos WHERE id = {$Tvalor['id_termo']}")[0]['id'];
                         }
                     }
                 }
@@ -37,7 +38,7 @@ if(is_array($data)){
             $tabela[$chave]['id'] = $valor['id'];
             $tabela[$chave]['imagem'] = "<img src='wa/ecommerce/uploads/".ler("SELECT uniq FROM ecommerce_prod_imagens WHERE id = {$valor['id_imagem_capa']}")[0]['uniq']."' height='100'/>";
             $tabela[$chave]['nome'] = $valor['nome'];
-            $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.")' style='cursor:pointer' data-target='#Modal' data-toggle='modal' onclick='showDetails(700)'><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
+            $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this.id)' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
         }
     }
 }

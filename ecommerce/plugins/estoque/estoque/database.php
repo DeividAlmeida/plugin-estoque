@@ -1,6 +1,6 @@
 <?php 
 #error_reporting(0);
-require_once('../../database/config.php');
+require_once('../../../../database/config.php');
 function ler($i){
       $mysqli = new mysqli(DB_HOSTNAME, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
       $mysqli -> set_charset(DB_CHARSET);

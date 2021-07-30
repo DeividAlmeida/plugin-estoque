@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `ecommerce_estoque` (
 `estoque` int(11)  DEFAULT NULL,
 `nome` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+INSERT INTO `ecommerce_plugins` (`id`, `titulo`, `nome`, `tipo`, `path`, `img`, `status`) VALUES (5, 'Estoque', 'estoque', 'estoque', 'ecommerce/plugins/estoque/estoque', '', 'checked');
 

@@ -3,7 +3,7 @@
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <div class="card">        
     <div class="card-body">                
-        <table class="table  table-striped BootstrapTable" id="BootstrapTable"  data-id-field="id" data-maintain-meta-data="true"  data-show-refresh="true"  data-show-pagination-switch="true" data-detail-view="true"   data-detail-formatter="detailFormatter"  data-url="ecommerce/estoque/database.php" data-toggle="table" data-pagination="true" data-locale="pt-BR" data-cache="false" data-search="true" data-show-export="true" data-export-data-type="all" data-export-types="['csv', 'excel', 'pdf']" data-mobile-responsive="true" data-click-to-select="true" data-toolbar="#toolbar" data-show-columns="true" >       
+        <table class="table  table-striped BootstrapTable" id="BootstrapTable"  data-id-field="id" data-maintain-meta-data="true"  data-show-refresh="true"  data-show-pagination-switch="true" data-detail-view="true"   data-detail-formatter="detailFormatter"  data-url="ecommerce/plugins/estoque/estoque/database.php" data-toggle="table" data-pagination="true" data-locale="pt-BR" data-cache="false" data-search="true" data-show-export="true" data-export-data-type="all" data-export-types="['csv', 'excel', 'pdf']" data-mobile-responsive="true" data-click-to-select="true" data-toolbar="#toolbar" data-show-columns="true" >       
             <thead >
                 <tr >                        
                     <th scope="col" data-field="id" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">ID<span></th>
@@ -21,13 +21,13 @@
                             <h3 class="modal-title text-white text-white" id="exampleModalLabel">Adicionar variação do produto </h3>
                             <a href="#" data-dismiss="modal" aria-label="Close" class="paper-nav-toggle paper-nav-white active"><i></i></a>
                         </div>
-                        <form id="addvariacao" action="?editarCliente&Clientes" method="POST"> 
+                        <form id="addvariacao"> 
                             <div class="modal-body no-b" id="no-b">
                                 <div class="row" v-if="main.length>0">
                                     <div class="col-md-6" v-for="att ,i of main">
                                         <div class="form-group">
                                             <label>{{att.atributo}}: </label>
-                                            <select class="custom-select termo" required @change="tageando($event.target.innerText)">
+                                            <select class="custom-select termo " required @change="tageando($event.target.innerText)">
                                                 <option hidden selected value="">Escolha um termo</option>
                                                 <option :value="termo.id" v-for="termo, id of main[i]"  v-show="id != 'atributo'">{{termo.nome}}</option>
                                              </select>
@@ -36,25 +36,25 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Estoque: </label>
-                                            <input id="estoque" class="form-control" name="estoque" type="number">
+                                            <input id="estoque" class="form-control variacao" name="estoque" type="number">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Limiar de estoque baixo: </label>
-                                            <input id="min" class="form-control" name="min" type="number">
+                                            <input id="min" class="form-control variacao" name="min" type="number">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Ref: </label>
-                                            <input id="ref" class="form-control" name="ref" disabled :value="ref" disable>
+                                            <input id="ref" class="form-control variacao" name="ref" disabled :value="ref" disable>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nome: </label>
-                                            <input id="nome" class="form-control" name="nome" disabled :value="nome" disable>
+                                            <input id="nome" class="form-control variacao" name="nome" disabled :value="nome" disable>
                                         </div>
                                     </div>
                                 </div>
@@ -113,5 +113,20 @@ function lincar(i,j,w){
         })
     })
 }
-
+document.getElementById('addvariacao').addEventListener('submit', function(event){
+    event.preventDefault()
+    let campos = document.getElementsByClassName('variacao')
+    let i = 0
+    do{
+        form.append(campos[i].name,campos[i].value)
+        i++
+    }
+    while( i < campos.length)
+    fetch('?addVariacao',{
+        method:'POST',
+        body:form
+    }).then(a=>{a.text()}).then(b=>{
+        alert(b)
+    })
+})
 </script>

@@ -8,8 +8,8 @@ $tabela = [];
 $data =  DBRead('ecommerce', '*', 'ORDER BY id DESC');
 if(is_array($data)){
     foreach($data as $chave => $valor){ 
+        $atributo = DBRead('ecommerce_prod_termos',' MIN(id_atributo) AS id_atributo', "WHERE id_produto = {$valor['id']} GROUP BY id_atributo");
         if(!isset($_GET['search'])){
-            $atributo = DBRead('ecommerce_prod_termos',' MIN(id_atributo) AS id_atributo', "WHERE id_produto = {$valor['id']} GROUP BY id_atributo");
             if(is_array($atributo)){
                 foreach($atributo as $Achave => $Avalor){
                     $tabela[$chave][$Achave]['atributo'] =  DBRead('ecommerce_atributos', '*',  "WHERE id ={$Avalor['id_atributo']}")[0]['nome'];  
@@ -53,7 +53,12 @@ if(is_array($data)){
                 $tabela[$chave]['imagem'] = "<img src='wa/ecommerce/uploads/".DBRead('ecommerce_prod_imagens', '*', "WHERE id = {$valor['id_imagem_capa']}")[0]['uniq']."' height='100'/>";
             }
             $tabela[$chave]['nome'] = $valor['nome'];
-            $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this.id)' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
+            $produto = DBRead('ecommerce_estoque','*',"WHERE ref = {$valor['id']}")[0];
+            if(!is_array($atributo) && is_array($produto)){
+                $tabela[$chave]['estoque_simple'] = '<input id="'.$produto['id'].'" onchange="estoque(this)" type="number" class="form-control" value="'.$produto['estoque'].'">';
+            }else{
+                $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this.id)' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
+            }
         }
     }
 }

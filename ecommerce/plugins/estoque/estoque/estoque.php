@@ -9,6 +9,7 @@
                     <th scope="col" data-field="id" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">ID<span></th>
                     <th scope="col" data-field="imagem" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">Imagem<span></th>
                     <th scope="col" data-field="nome" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Nome<span></th>
+                    <th scope="col" data-field="estoque_simple" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Estoque Simples<span></th>
                     <th scope="col" data-field="variacao" data-sortable="true" ><span style="font-weight: bold; font-size:16px; whidth:50px">Variação <span></th>
                 </tr>
             </thead>
@@ -61,10 +62,10 @@
                                     <input type="hidden" name="ref" :value="ref">
                                 </div>
                                 <div v-else class="row justify-content-center">
-                                    <h3>Esse produto não possui atributos</h3>
+                                    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
                                 </div>
                             </div>
-                            <div class="modal-footer">
+                            <div class="modal-footer" v-if="main.length>0">
                                 <button id="savet" class="btn btn-primary" type="submit">
                                     <i class="icon icon-floppy-o"></i>Salvar
                                 </button>  

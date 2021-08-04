@@ -7,7 +7,7 @@ if(isset($_GET['UpdateQtd'])){
 	$vlf = get('vlf');
 	$pdt = get('pdt');
 	$ref = get('ref');
-    $refs =  get('refs');
+  $refs =  get('refs');
   CarrinhoUpdate($id, $qtd, $vlf, $pdt, $ref, $refs);
   exit();
 }

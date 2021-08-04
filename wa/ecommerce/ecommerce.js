@@ -1,7 +1,7 @@
 async function estoque(a){
-    let req = await fetch(UrlPainel+'wa/ecommerce/apis/estoque.php?ref='+a)
-    let res = await req.json()
-    return res
+  let req = await fetch(UrlPainel+'wa/ecommerce/apis/estoque.php?ref='+a)
+  let res = await req.json()
+  return res
 }
 function EcommerceListagem(id, pag){
 $.ajax({
@@ -9,13 +9,13 @@ type: "GET",
 cache: false,
 url: UrlPainel+'wa/ecommerce/listagem?id='+id+'&pag='+pag,
 beforeSend: function (data){
-  //$("#SimpleSlideWA"+id).html("<center><br><img src=¥""+UrlPainel+"wa/css_js/loading.gif¥"><br>Carregando...<br></center>");
+//$("#SimpleSlideWA"+id).html("<center><br><img src=¥""+UrlPainel+"wa/css_js/loading.gif¥"><br>Carregando...<br></center>");
 },
 success: function (data) {
-  jQuery('#EcommerceListagem'+id).html(data);
+jQuery('#EcommerceListagem'+id).html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceListagem(id, pag); }, 5000);
+setTimeout(function(){ EcommerceListagem(id, pag); }, 5000);
 },
 });
 }
@@ -25,10 +25,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/carrinho',
 success: function (data) {
-  jQuery('#EcommerceCarrinho').html(data);
+jQuery('#EcommerceCarrinho').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceCarrinho(); }, 5000);
+setTimeout(function(){ EcommerceCarrinho(); }, 5000);
 },
 });
 }
@@ -39,10 +39,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/checkout',
 success: function (data) {
-  jQuery('#EcommerceCheckout').html(data);
+jQuery('#EcommerceCheckout').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceCheckout(); }, 5000);
+setTimeout(function(){ EcommerceCheckout(); }, 5000);
 },
 });
 }
@@ -52,10 +52,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/checkout/eu.php',
 success: function (data) {
-  jQuery('#EcommerceCheckoutEu').html(data);
+jQuery('#EcommerceCheckoutEu').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceCheckoutEu(); }, 5000);
+setTimeout(function(){ EcommerceCheckoutEu(); }, 5000);
 },
 });
 }
@@ -65,10 +65,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/btn_carrinho',
 success: function (data) {
-  jQuery('#EcommerceBtnCarrinho').html(data);
+jQuery('#EcommerceBtnCarrinho').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceBtnCarrinho(); }, 5000);
+setTimeout(function(){ EcommerceBtnCarrinho(); }, 5000);
 },
 });
 }
@@ -82,10 +82,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/busca/resultado.php?b='+busca+'&pag='+pag,
 success: function (data) {
-  jQuery('#EcommerceBuscaResultado').html(data);
+jQuery('#EcommerceBuscaResultado').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceBuscaResultado(); }, 5000);
+setTimeout(function(){ EcommerceBuscaResultado(); }, 5000);
 },
 });
 }
@@ -95,10 +95,10 @@ type:    "GET",
 cache:   false,
 url:     UrlPainel+'wa/ecommerce/busca/buscador.php',
 success: function (data) {
-  jQuery('#EcommerceBuscador').html(data);
+jQuery('#EcommerceBuscador').html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceBuscador(); }, 5000);
+setTimeout(function(){ EcommerceBuscador(); }, 5000);
 },
 });
 }
@@ -108,13 +108,13 @@ type: "GET",
 cache: false,
 url: UrlPainel+'wa/ecommerce/slider?id='+id,
 beforeSend: function (data){
-  //$("#SimpleSlideWA"+id).html("<center><br><img src=¥""+UrlPainel+"wa/css_js/loading.gif¥"><br>Carregando...<br></center>");
+//$("#SimpleSlideWA"+id).html("<center><br><img src=¥""+UrlPainel+"wa/css_js/loading.gif¥"><br>Carregando...<br></center>");
 },
 success: function (data) {
-  jQuery('#EcommerceSlider'+id).html(data);
+jQuery('#EcommerceSlider'+id).html(data);
 },
 error: function (data) {
-  setTimeout(function(){ EcommerceSlider(id); }, 5000);
+setTimeout(function(){ EcommerceSlider(id); }, 5000);
 },
 });
 }
@@ -140,50 +140,50 @@ function CarrinhoAdd(id, carrinho_url, qtd, vlf, att){
 let atributo = document.getElementsByClassName('produto-categorias')
 let ids = id
 for(let i = 0;i<atributo.length;i++){
-   ids +=  "-"+atributo[i].options[atributo[i].selectedIndex].getAttribute('data-id')
+ ids +=  "-"+atributo[i].options[atributo[i].selectedIndex].getAttribute('data-id')
 }
-
 estoque(ids).then(res=>{
-  if( parseInt(res.estoque) >= parseInt(qtd)){
-      $.ajax({
-    type: 	"GET",
-    cache: 	false,
-    url: 		UrlPainel+'wa/ecommerce/carrinho?AddItem='+id+"&qtd="+qtd+"&vlf="+vlf+"&att="+att+"&ref="+res.id+"&refs="+ids,
-    beforeSend: function (data){
-      $('.shop--product-page--header__button').html("Adicionando ao carrinho...");
-    },
-    success: function () {
-      EcommerceBtnCarrinho();
-      $('.shop--product-page--header__button').html("Comprar");
+if( parseInt(res.estoque) >= parseInt(qtd)){
+  if(att === void(0)){ att = id;}
+    $.ajax({
+  type: 	"GET",
+  cache: 	false,
+  url: 		UrlPainel+'wa/ecommerce/carrinho?AddItem='+id+"&qtd="+qtd+"&vlf="+vlf+"&att="+att+"&ref="+res.id+"&refs="+ids,
+  beforeSend: function (data){
+    $('.shop--product-page--header__button').html("Adicionando ao carrinho...");
+  },
+  success: function () {
+    EcommerceBtnCarrinho();
+    $('.shop--product-page--header__button').html("Comprar");
+    Swal.fire({
+      type:  'success',
+              title: "Item adicionado no carrinho",
+      showConfirmButton: false,
+      showCloseButton: true,
+      html: '<p>Clique no botão abaixo para ir para o carrinho ou clique no X para continuar comprando</p><a class="btn btn-primary shop--modal-add-product__btn" href="'+carrinho_url+'">Ver carrinho</a>'
+          });
+  }
+});
+}else{
       Swal.fire({
-        type:  'success',
-                title: "Item adicionado no carrinho",
+        type: 'error',
+        title: 'Oops...',
+        text: 'Infelizmente não temos estoque suficiente para suprir essa demanda. Nós temos '+ res.estoque +' unidade(s) desse produto em estoque.',
         showConfirmButton: false,
         showCloseButton: true,
-        html: '<p>Clique no botão abaixo para ir para o carrinho ou clique no X para continuar comprando</p><a class="btn btn-primary shop--modal-add-product__btn" href="'+carrinho_url+'">Ver carrinho</a>'
-            });
-    }
-  });
-  }else{
-        Swal.fire({
-          type: 'error',
-          title: 'Oops...',
-          text: 'Infelizmente não temos estoque suficiente para suprir essa demanda. Nós temos '+ res.estoque +' unidade(s) desse produto em estoque.',
-          showConfirmButton: false,
-          showCloseButton: true,
-        });
+      });
 }
 })
 }
 function alerta(){
 
 Swal.fire({
-      type: 'error',
-      title: 'Oops...',
-      text: 'Por favor preencha todos os campos antes de efetuar a compra!',
-      showConfirmButton: false,
-      showCloseButton: true,
-    });
+    type: 'error',
+    title: 'Oops...',
+    text: 'Por favor preencha todos os campos antes de efetuar a compra!',
+    showConfirmButton: false,
+    showCloseButton: true,
+  });
 
 } 
 function height(i){

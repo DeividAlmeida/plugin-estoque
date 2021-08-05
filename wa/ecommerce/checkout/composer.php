@@ -8,6 +8,7 @@ require_once('../../../database/config.database.php');
 require_once('../../../database/config.php');
 $query2 = DBRead('ecommerce_config','*');
 $config = [];
+$map =[];
 foreach ($query2 as $key => $row) {
 	$config[$row['id']] = $row['valor'];
 }
@@ -92,8 +93,10 @@ if (isset($_POST)) {
        		    }
        		    require('../../../controller/ecommerce/email_alerta.php');
        		}
+       		$map[$b[3]] = $b[1];
      	}
     }
+     DBUpdate('ecommerce_vendas',['estorno'=> json_encode($map)]," id = '{$query}'");
 	$route = post('composer');
 	require($route);
 }

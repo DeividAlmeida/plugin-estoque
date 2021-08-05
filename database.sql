@@ -7,3 +7,4 @@ CREATE TABLE IF NOT EXISTS `ecommerce_estoque` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 INSERT INTO `ecommerce_plugins` (`id`, `titulo`, `nome`, `tipo`, `path`, `img`, `status`) VALUES (5, 'Estoque', 'estoque', 'estoque', 'ecommerce/plugins/estoque/estoque', '', 'checked');
 
+ALTER TABLE `ecommerce_vendas` ADD `estorno` TEXT NULL AFTER `view`;

@@ -49,13 +49,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Ref: </label>
-                                            <input id="ref" class="form-control variacao" name="ref"  :value="ref" disable>
+                                            <input id="ref" class="form-control variacao" name="ref"  :value="ref" disabled>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nome: </label>
-                                            <input id="nome" class="form-control variacao"  :value="nome" disable>
+                                            <input id="nome" class="form-control variacao"  :value="nome" disabled>
                                         </div>
                                     </div>
                                     <input type="hidden" name="nome" :value="nome">
@@ -118,6 +118,8 @@ function lincar(i,j,w){
 }
 
 function estoque(e){
-    fetch('?AtualizarVariacao='+e.id+'&valor='+e.value)
+    fetch('?AtualizarVariacao='+e.id+'&valor='+e.value+'&ml='+e.getAttribute('ml')).then(a=>{
+        swal("Salvo!", "Estoque atualizado com sucesso !", "success");
+    })
 }
 </script>

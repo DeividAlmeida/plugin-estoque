@@ -33,13 +33,15 @@ if(is_array($data)){
                                     <div class="card">
                                         <div class="card-header">'.$Pvalor['nome'].'</div>
                                         <div class="card-body"> Referência'] = $Pvalor['ref'];
-                                            $tabela[$chave]['<div class="hidden">'.$Pchave.'</div>'.'Estoque'] = '<input onchange="estoque(this)" id="'.$Pvalor['id'].'" style="width:30%" type="number" value="'.$Pvalor['estoque'].'" >';
+                                            $tabela[$chave]['<div class="hidden">'.$Pchave.'</div>'.'Estoque'] = '<input onchange="estoque(this, null)" id="'.$Pvalor['id'].'" style="width:30%" type="number" value="'.$Pvalor['estoque'].'" >';
                                         $tabela[$chave]['<div class="hidden">'.$Pchave.'</div></div>
                                         <div class="card-footer "> 
                                             <div class="hidden">'] = '</div>';
-                                            $tabela[$chave]['<a href="javascript:void(0)" id="DeletarVariacao" onclick="DeletarItem('.$Pvalor['id'].', this.id);" class="btn btn-primary">
-                                                <i class="icon icon-trash "></i> 
-                                            Excluir</a><div class="hidden">']  = '</div>';
+                                            if( checkPermission($PERMISSION, $_SERVER['SCRIPT_NAME'],'estoque', 'deletar')){ 
+                                                $tabela[$chave]['<a href="javascript:void(0)" id="DeletarVariacao" onclick="DeletarItem('.$Pvalor['id'].', this.id);" class="btn btn-primary">
+                                                    <i class="icon icon-trash "></i> 
+                                                Excluir</a><div class="hidden">']  = '</div>';
+                                            }
                                         $tabela[$chave]['</div>
                                     </div>
                                 </div>
@@ -55,7 +57,7 @@ if(is_array($data)){
             $tabela[$chave]['nome'] = $valor['nome'];
             $produto = DBRead('ecommerce_estoque','*',"WHERE ref = {$valor['id']}")[0];
             if(!is_array($atributo) && is_array($produto)){
-                $tabela[$chave]['estoque_simple'] = '<input id="'.$produto['id'].'" onchange="estoque(this)" type="number" class="form-control" value="'.$produto['estoque'].'">';
+                $tabela[$chave]['estoque_simple'] = '<input id="'.$produto['id'].'" ml="'.$valor['id_ml'].'" onchange="estoque(this)" type="number" class="form-control" value="'.$produto['estoque'].'">';
             }else{
                 $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this.id)' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
             }

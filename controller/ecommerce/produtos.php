@@ -51,8 +51,13 @@ if (isset($_GET['AddProduto'])) {
   $zero = 0;
   $data2 = array('id_produto' => $id_produto, );
   DBUpdate('ecommerce_prod_termos', $data2, "id_produto = {$zero}");
-  DBCreate('ecommerce_estoque',  ['ref'=>$id_produto,'min'=>5]);
+
+  if( file_exists('estoque.php')){
+    DBCreate('ecommerce_estoque',  ['ref'=>$id_produto,'min'=>5]);
+  }
+  
   if(!$id_produto) { Redireciona('?ListarProduto&erro'); }
+
 
   // Cadastra todas categorias informadas
   if($_POST['categorias']){

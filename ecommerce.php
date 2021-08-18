@@ -34,9 +34,11 @@ $UrlPage	 = 'Ecommerce.php';
 			    <?php if (checkPermission($PERMISSION, $_SERVER['SCRIPT_NAME'], 'pedidos')) { ?>
 					<a class="btn btn-sm btn-primary" href="?Vendas" >Pedidos</a>
 					<a class="btn btn-sm btn-primary" href="?Clientes" >Clientes</a>
-				<?php if( file_exists('estoque.php')){ ?>
+				<?php } ?>
+				
+				<?php if( checkPermission($PERMISSION, $_SERVER['SCRIPT_NAME'],'estoque', 'adicionar')){ ?>
 					    <a class="btn btn-sm btn-primary" href="?Estoque" >Estoque</a>
-				<?php } } ?>
+				<?php } ?>
 
 				<?php if (checkPermission($PERMISSION, $_SERVER['SCRIPT_NAME'], 'listagem')) { ?>
 					<a class="btn btn-sm btn-primary" href="#" data-toggle="dropdown">Listagens</a>
@@ -125,6 +127,9 @@ $UrlPage	 = 'Ecommerce.php';
 						<a class="dropdown-item" href="?configPagamento">Configurações de Pagamento</a>
 						<a class="dropdown-item" href="?configEmail">Configurações de Email</a>
 						<a class="dropdown-item" href="?configLink">Configurações de Link do Cliente</a>
+						<?php if( file_exists('mercadolivre.php')){ ?>
+					    	<a class="dropdown-item" href="?MercadoLivre" >Configurações do Mercado Livre</a>
+						<?php } ?>
 					</div>					
 				<?php } ?>
 			</span>
@@ -186,6 +191,8 @@ $UrlPage	 = 'Ecommerce.php';
 			require_once('ecommerce/clientes/clientes.php');
 		elseif (isset($_GET['Estoque']) && file_exists('estoque.php')) :
 			require_once('ecommerce/plugins/estoque/estoque/estoque.php');
+		elseif (isset($_GET['MercadoLivre'])):
+			require_once('ecommerce/plugins/mercadolivre/mercadolivre/mercadolivre.php');
 		elseif (isset($_GET['VisualizarListaMarca'])) :
 			require_once('ecommerce/listagens/item/listar_marca.php');
 		elseif (isset($_GET['ListarCupons'])) :
@@ -644,7 +651,8 @@ $UrlPage	 = 'Ecommerce.php';
 
 					xhttp.onload = function(){
 						swal("Status Atualizado!", "Status do pedido atualizado com sucesso! \n Notificação enviada ao cliente com sucesso!", "success").then(next=>{
-						    if(j == 'cancelado'){
+						    <?php if( file_exists('estoque.php')){ ?>
+							if(j == 'cancelado'){
         					    swal({
                         				title: "Estorno!!",
                         				text: "Deseja que estonemos este(s) produto(s) ao estoque?",
@@ -659,10 +667,13 @@ $UrlPage	 = 'Ecommerce.php';
                         				closeOnCancel: false
                         			}).then(function(isConfirm2) {
         				                if (isConfirm2) {
-        				                    fetch('?Estorno='+d)
+        				                    fetch('?Estorno='+d).then(a=>{
+        				                        swal("Salvo!", "Estoque atualizado com sucesso !", "success");
+        				                    })
         				                }
                         			})
 					        }
+							<?php } ?>
 						});                              
 					setImmediate(function refreshTable() {$('#BootstrapTable').bootstrapTable('refresh', {silent: false});});
 					} 

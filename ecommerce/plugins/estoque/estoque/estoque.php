@@ -22,7 +22,7 @@
                             <h3 class="modal-title text-white text-white" id="exampleModalLabel">Adicionar variação do produto </h3>
                             <a href="#" data-dismiss="modal" aria-label="Close" class="paper-nav-toggle paper-nav-white active"><i></i></a>
                         </div>
-                        <form id="addvariacao" method="POST" action="?addVariacao"> 
+                        <form id="addvariacao" method="POST" :action="'?addVariacao&ML-id='+ml"> 
                             <div class="modal-body no-b" id="no-b">
                                 <div class="row" v-if="main.length>0">
                                     <div class="col-md-6" v-for="att ,i of main">
@@ -85,7 +85,8 @@ const vue  = new Vue({
     data:{
         main:[],
         ref:null,
-        nome:null
+        nome:null,
+        ml:null
     },
     methods:{
         tageando: function(){
@@ -102,8 +103,9 @@ const vue  = new Vue({
     }
 })
 function lincar(i,j,w){
+    vue.ml=w.getAttribute('ml')
     id = j
-    nome = w
+    nome = w.id
     vue.main=[]
     vue.ref = null
     vue.nome = null

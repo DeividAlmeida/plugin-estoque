@@ -59,7 +59,7 @@ if(is_array($data)){
             if(!is_array($atributo) && is_array($produto)){
                 $tabela[$chave]['estoque_simple'] = '<input id="'.$produto['id'].'" ml="'.$valor['id_ml'].'" onchange="estoque(this)" type="number" class="form-control" value="'.$produto['estoque'].'">';
             }else{
-                $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this.id)' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
+                $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this)' ml='".$valor['id_ml']."' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
             }
         }
     }

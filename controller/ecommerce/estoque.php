@@ -7,6 +7,54 @@ if(isset($_GET['addVariacao'])){
     foreach($_POST as $key => $valor){
         $data[$key]=$valor;
     };
+    
+    #ML
+    
+    if( file_exists('mercadolivreS.php')){
+        
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://api.mercadolibre.com/items/MLB1986951425/variations',
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'POST',
+          CURLOPT_POSTFIELDS =>' {  
+                 "attribute_combinations":[  
+                    {  
+                       "name":"Tamanho",
+                       "value_id":"52005",
+                       "value_name":"34"
+                    },
+                     {  
+                       "name":"Color",
+                       "value_id":"52005",
+                       "value_name":"Marrón"
+                    }
+                 ],
+                 "price":100,
+                 "available_quantity":4,
+                 "sold_quantity":0,
+                 "picture_ids":[  
+                    "https://static.riachuelo.com.br/RCHLO/14008190/portrait/5f50fe1c48380d479e457b721cb04884c653fc95.jpg"
+                 ]
+              }',
+         CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+                   'Authorization: Bearer '.$MLtoken['token'],
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+        echo $response;
+
+    }
     $query = DBCreate('ecommerce_estoque', $data, true); 
     if ($query != 0) {
         Redireciona('?Estoque&sucesso');

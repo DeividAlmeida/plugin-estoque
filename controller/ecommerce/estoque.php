@@ -1,21 +1,42 @@
 <?php
+error_reporting(0);
 if( file_exists('mercadolivre.php')){
     $MLtoken = DBRead('ecommerce_mercadolivre', '*')[0];
 }
 if(isset($_GET['addVariacao'])){
-    $data= [];
-    foreach($_POST as $key => $valor){
-        $data[$key]=$valor;
-    };
     
-    #ML
+    $data= [
+        'estoque'=>$_POST['estoque'],
+        'min'=>$_POST['min'],
+        'nome'=>$_POST['nome'],
+        'ref'=>$_POST['ref']
+        ];
     
-    if( file_exists('mercadolivreS.php')){
+    
+    #ML 
+    
+    if( file_exists('mercadolivre.php') && !empty($_GET['ML-id'])){
         
+        $produto = DBRead('ecommerce','*',"WHERE id_ml = '{$_GET['ML-id']}'")[0];
+        
+        $img = ConfigPainel('base_url').'wa/ecommerce/uploads/'.DBRead('ecommerce_prod_imagens', '*', "WHERE id = {$produto['id_imagem_capa']}")[0]['uniq'];
+        
+         $atributo = DBRead('ecommerce_prod_termos',' MIN(id_atributo) AS id_atributo', "WHERE id_produto = {$produto['id']} GROUP BY id_atributo");
+         if(is_array($atributo)){
+                foreach($atributo as $Achave => $Avalor){
+                    $att_name = DBRead('ecommerce_atributos', '*',  "WHERE id ={$Avalor['id_atributo']}")[0]['nome'];
+                    $combinacao .= ' 
+                    {  
+                       "name":"'.$att_name.'",
+                       "value_id":"52008",
+                       "value_name":"'.DBRead('ecommerce_termos', '*', "WHERE id = {$_POST[$att_name]}")[0]['nome'].'"
+                    },';
+                }
+            }
         $curl = curl_init();
-        
+
         curl_setopt_array($curl, array(
-          CURLOPT_URL => 'https://api.mercadolibre.com/items/MLB1986951425/variations',
+          CURLOPT_URL => 'https://api.mercadolibre.com/items/'.$_GET['ML-id'].'/variations',
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => '',
           CURLOPT_MAXREDIRS => 10,
@@ -25,22 +46,12 @@ if(isset($_GET['addVariacao'])){
           CURLOPT_CUSTOMREQUEST => 'POST',
           CURLOPT_POSTFIELDS =>' {  
                  "attribute_combinations":[  
-                    {  
-                       "name":"Tamanho",
-                       "value_id":"52005",
-                       "value_name":"34"
-                    },
-                     {  
-                       "name":"Color",
-                       "value_id":"52005",
-                       "value_name":"Marrón"
-                    }
+                    '.$combinacao.'
                  ],
-                 "price":100,
-                 "available_quantity":4,
-                 "sold_quantity":0,
+                 "price":'.$produto['preco'].',
+                 "available_quantity":'.$_POST['estoque'].',
                  "picture_ids":[  
-                    "https://static.riachuelo.com.br/RCHLO/14008190/portrait/5f50fe1c48380d479e457b721cb04884c653fc95.jpg"
+                    "'.$img.'"
                  ]
               }',
          CURLOPT_HTTPHEADER => array(
@@ -50,16 +61,17 @@ if(isset($_GET['addVariacao'])){
         ));
         
         $response = curl_exec($curl);
-        
+        $response = json_decode($response);
+        $data['id_ml'] = $response[count($response)-1]->id;
         curl_close($curl);
-        echo $response;
-
     }
+       
     $query = DBCreate('ecommerce_estoque', $data, true); 
+    var_dump($response);
     if ($query != 0) {
-        Redireciona('?Estoque&sucesso');
+        #Redireciona('?Estoque&sucesso');
     } else {
-        Redireciona('?Estoque&erro');
+        #Redireciona('?Estoque&erro');
   }
 }
 if(isset($_GET['DeletarVariacao'])){
@@ -108,5 +120,6 @@ $valor = json_decode(DBRead('ecommerce_vendas', '*', "WHERE id = $id ")[0]['esto
            $real =  DBRead('ecommerce_estoque', '*', "WHERE id = $key ")[0]['estoque'] + $value;
            DBUpdate('ecommerce_estoque', ['estoque'=>$real], "id = '{$key}'");
         }  
+        DBUpdate('ecommerce_vendas', ['estorno'=> null], "id = '{$id }'");
     }
 }

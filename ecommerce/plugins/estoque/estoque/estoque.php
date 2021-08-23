@@ -28,7 +28,7 @@
                                     <div class="col-md-6" v-for="att ,i of main">
                                         <div class="form-group">
                                             <label>{{att.atributo}}: </label>
-                                            <select class="custom-select termo " required @change="tageando($event.target.innerText)">
+                                            <select class="custom-select termo " :name="att.atributo" required @change="tageando($event.target.innerText)">
                                                 <option hidden selected value="">Escolha um termo</option>
                                                 <option :value="termo.id" v-for="termo, id of main[i]"  v-show="id != 'atributo'">{{termo.nome}}</option>
                                              </select>
@@ -49,13 +49,13 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Ref: </label>
-                                            <input id="ref" class="form-control variacao" name="ref"  :value="ref" disabled>
+                                            <input id="ref" class="form-control variacao" :value="ref" disabled>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Nome: </label>
-                                            <input id="nome" class="form-control variacao"  :value="nome" disabled>
+                                            <input id="nome" class="form-control variacao" :value="nome" disabled>
                                         </div>
                                     </div>
                                     <input type="hidden" name="nome" :value="nome">

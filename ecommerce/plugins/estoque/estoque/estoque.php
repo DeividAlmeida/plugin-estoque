@@ -9,7 +9,6 @@
                     <th scope="col" data-field="id" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">ID<span></th>
                     <th scope="col" data-field="imagem" data-sortable="true" > <span style="font-weight: bold; font-size:16px;">Imagem<span></th>
                     <th scope="col" data-field="nome" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Nome<span></th>
-                    <th scope="col" data-field="estoque_simple" data-sortable="true" ><span style="font-weight: bold; font-size:16px;">Estoque Simples<span></th>
                     <th scope="col" data-field="variacao" data-sortable="true" ><span style="font-weight: bold; font-size:16px; whidth:50px">Variação <span></th>
                 </tr>
             </thead>
@@ -122,6 +121,11 @@ function lincar(i,j,w){
 function estoque(e){
     fetch('?AtualizarVariacao='+e.id+'&valor='+e.value+'&ml='+e.getAttribute('ml')).then(a=>{
         swal("Salvo!", "Estoque atualizado com sucesso !", "success");
+    })
+}
+function limiar(e){
+    fetch('?Limiar='+e.id+'&valor='+e.value).then(a=>{
+        swal("Salvo!", "Limiar atualizada com sucesso !", "success");
     })
 }
 </script>

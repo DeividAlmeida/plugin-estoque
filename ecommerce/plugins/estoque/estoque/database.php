@@ -8,6 +8,7 @@ $tabela = [];
 $data =  DBRead('ecommerce', '*', 'ORDER BY id DESC');
 if(is_array($data)){
     foreach($data as $chave => $valor){ 
+         $produto = DBRead('ecommerce_estoque','*',"WHERE ref = {$valor['id']}")[0];
         $atributo = DBRead('ecommerce_prod_termos',' MIN(id_atributo) AS id_atributo', "WHERE id_produto = {$valor['id']} GROUP BY id_atributo");
         if(!isset($_GET['search'])){
             if(is_array($atributo)){
@@ -34,6 +35,7 @@ if(is_array($data)){
                                         <div class="card-header">'.$Pvalor['nome'].'</div>
                                         <div class="card-body"> Referência'] = $Pvalor['ref'];
                                             $tabela[$chave]['<div class="hidden">'.$Pchave.'</div>'.'Estoque'] = '<input onchange="estoque(this, null)" id="'.$Pvalor['id'].'" style="width:30%" type="number" value="'.$Pvalor['estoque'].'" >';
+                                             $tabela[$chave]['<div class="hidden">'.$Pchave.'</div>'.'Limiar de Estoque Baixo']= ' <input id="'.$Pvalor['id'].'" ml="'.$valor['id_ml'].'" onchange="limiar(this)" type="number" style="width:25%" value="'.$Pvalor['min'].'">';
                                         $tabela[$chave]['<div class="hidden">'.$Pchave.'</div></div>
                                         <div class="card-footer "> 
                                             <div class="hidden">'] = '</div>';
@@ -46,6 +48,18 @@ if(is_array($data)){
                                     </div>
                                 </div>
                             <div class="hidden">'.$Pchave] ='</div>' ;
+                        }else if(!is_array($atributo) && is_array($produto)){
+                        $tabela[$chave]['<div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                '.$valor['nome'].'
+                                </div>
+                                <div class="card-body">Estoque'] = '
+                                    <input id="'.$produto['id'].'" ml="'.$valor['id_ml'].'" onchange="estoque(this)" type="number" style="width:30%" value="'.$produto['estoque'].'">';
+                                    $tabela[$chave]['Limiar de Estoque Baixo']= ' <input id="'.$produto['id'].'" ml="'.$valor['id_ml'].'" onchange="limiar(this)" type="number" style="width:25%" value="'.$produto['min'].'">';
+                                $tabela[$chave]['</div>
+                            </div>
+                            <div class="hidden">'] = '</div>';
                        }
                     }
                 }
@@ -55,10 +69,7 @@ if(is_array($data)){
                 $tabela[$chave]['imagem'] = "<img src='wa/ecommerce/uploads/".DBRead('ecommerce_prod_imagens', '*', "WHERE id = {$valor['id_imagem_capa']}")[0]['uniq']."' height='100'/>";
             }
             $tabela[$chave]['nome'] = $valor['nome'];
-            $produto = DBRead('ecommerce_estoque','*',"WHERE ref = {$valor['id']}")[0];
-            if(!is_array($atributo) && is_array($produto)){
-                $tabela[$chave]['estoque_simple'] = '<input id="'.$produto['id'].'" ml="'.$valor['id_ml'].'" onchange="estoque(this)" type="number" class="form-control" value="'.$produto['estoque'].'">';
-            }else{
+            if(is_array($atributo)){
                 $tabela[$chave]['variacao'] = "<center><a onclick='lincar(".$chave.",".$valor['id'].",this)' ml='".$valor['id_ml']."' id='".$valor['nome']."' style='cursor:pointer' data-target='#Modal' data-toggle='modal' ><i class='text-center text-primary icon icon-plus-circle fa-3x' aria-hidden='true'></i></a></center>";
             }
         }

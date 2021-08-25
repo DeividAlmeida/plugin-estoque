@@ -11,10 +11,7 @@ if(isset($_GET['addVariacao'])){
         'nome'=>$_POST['nome'],
         'ref'=>$_POST['ref']
         ];
-    
-    
-    #ML 
-    
+        
     if( file_exists('mercadolivre.php') && !empty($_GET['ML-id'])){
         
          $produto = DBRead('ecommerce','*',"WHERE id_ml = '{$_GET['ML-id']}'")[0];
@@ -68,7 +65,7 @@ if(isset($_GET['addVariacao'])){
     }
        
     $query = DBCreate('ecommerce_estoque', $data, true); 
-    #var_dump($response);
+   #var_dump($response);
     if ($query != 0) {
         Redireciona('?Estoque&sucesso');
     } else {
@@ -77,6 +74,31 @@ if(isset($_GET['addVariacao'])){
 }
 if(isset($_GET['DeletarVariacao'])){
     $id     = get('DeletarVariacao');
+
+    if( file_exists('mercadolivre.php')){
+        $type = DBRead('ecommerce_estoque', '*', "WHERE id = $id ")[0];
+        $curl = curl_init();
+        
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => 'https://api.mercadolibre.com/items/'.$type['id_ml'].'/variations/'.$type['id_va'],
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => '',
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => 'DELETE',
+          CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+                   'Authorization: Bearer '.$MLtoken['token'],
+          ),
+        ));
+        
+        $response = curl_exec($curl);
+        
+        curl_close($curl);
+
+    }
     $query  = DBDelete('ecommerce_estoque',"id = '{$id}'");
     if ($query != 0) {
         Redireciona('?Estoque&sucesso');
@@ -143,6 +165,7 @@ if(isset($_GET['AtualizarVariacao'])){
 if(isset($_GET['Limiar'])){
     $id = $_GET['Limiar'];
     $query = DBUpdate('ecommerce_estoque', ['min'=>$_GET['valor']], "id = '{$id}'");
+    #var_dump($query);
 }
 
 if(isset($_GET['Estorno'])){

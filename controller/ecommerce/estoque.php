@@ -11,7 +11,7 @@ if(isset($_GET['addVariacao'])){
         'nome'=>$_POST['nome'],
         'ref'=>$_POST['ref']
         ];
-        
+    
     if( file_exists('mercadolivre.php') && !empty($_GET['ML-id'])){
         
          $produto = DBRead('ecommerce','*',"WHERE id_ml = '{$_GET['ML-id']}'")[0];
@@ -65,7 +65,7 @@ if(isset($_GET['addVariacao'])){
     }
        
     $query = DBCreate('ecommerce_estoque', $data, true); 
-   #var_dump($response);
+   
     if ($query != 0) {
         Redireciona('?Estoque&sucesso');
     } else {
@@ -74,6 +74,7 @@ if(isset($_GET['addVariacao'])){
 }
 if(isset($_GET['DeletarVariacao'])){
     $id     = get('DeletarVariacao');
+
 
     if( file_exists('mercadolivre.php')){
         $type = DBRead('ecommerce_estoque', '*', "WHERE id = $id ")[0];
@@ -109,6 +110,7 @@ if(isset($_GET['DeletarVariacao'])){
 if(isset($_GET['AtualizarVariacao'])){
     $id = $_GET['AtualizarVariacao'];
        $query = DBUpdate('ecommerce_estoque', ['estoque'=>$_GET['valor']], "id = '{$id}'");
+       
     if( file_exists('mercadolivre.php')){
         $type = DBRead('ecommerce_estoque', '*', "WHERE id = $id ")[0];
         $curl = curl_init();
@@ -154,7 +156,6 @@ if(isset($_GET['AtualizarVariacao'])){
 
     }
     
-    #var_dump($body);
     if ($query != 0) {
        Redireciona('?Estoque&sucesso');
     } else {
@@ -165,7 +166,6 @@ if(isset($_GET['AtualizarVariacao'])){
 if(isset($_GET['Limiar'])){
     $id = $_GET['Limiar'];
     $query = DBUpdate('ecommerce_estoque', ['min'=>$_GET['valor']], "id = '{$id}'");
-    #var_dump($query);
 }
 
 if(isset($_GET['Estorno'])){
@@ -175,6 +175,54 @@ $valor = json_decode(DBRead('ecommerce_vendas', '*', "WHERE id = $id ")[0]['esto
         foreach($valor as $key => $value){
            $real =  DBRead('ecommerce_estoque', '*', "WHERE id = $key ")[0]['estoque'] + $value;
            DBUpdate('ecommerce_estoque', ['estoque'=>$real], "id = '{$key}'");
+            if( file_exists('mercadolivre.php')){
+                $type = DBRead('ecommerce_estoque', '*', "WHERE id = $key ")[0];
+                $item = $type['id_ml'];
+                $curl = curl_init();
+               if(empty($type['id_va'])){
+                   $item = DBRead('ecommerce', '*', "WHERE id = '{$type['ref']}' ")[0]['id_ml']; 
+                   if(!empty($cod)){
+                       $body = '{
+                            "available_quantity": '.$type['estoque'].'
+                        }';
+                   }
+               }else{
+                    $group =  DBRead('ecommerce_estoque', '*', "WHERE id_ml = '{$type['id_ml']}' ");
+                    if(!empty($group)){
+                        foreach($group as $chave => $cod){
+                            $inside .= '{
+                                "id": '.$cod['id_va'].',
+                                "available_quantity": '.$cod['estoque'].'
+            	            },';
+                        }
+                    }
+                     $body = '{
+                        "variations":  [
+                        '.$inside.'
+                        ]
+                    }'; 
+                }
+               
+                curl_setopt_array($curl, array(
+                  CURLOPT_URL => 'https://api.mercadolibre.com/items/'.$item,
+                  CURLOPT_RETURNTRANSFER => true,
+                  CURLOPT_ENCODING => '',
+                  CURLOPT_MAXREDIRS => 10,
+                  CURLOPT_TIMEOUT => 0,
+                  CURLOPT_FOLLOWLOCATION => true,
+                  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                  CURLOPT_CUSTOMREQUEST => 'PUT',
+                  CURLOPT_POSTFIELDS =>$body,
+                  CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                           'Authorization: Bearer '.$MLtoken['token'],
+                  ),
+                ));
+                $response = curl_exec($curl);
+                
+                curl_close($curl);
+        
+            }
         }  
         DBUpdate('ecommerce_vendas', ['estorno'=> null], "id = '{$id }'");
     }
